@@ -41,3 +41,17 @@
 
   }
 }
+
+.form-control.is_invalid~.invalid-feedback,
+.form-control.is_invalid~.invalid-tooltip,
+.was-validated .form-control:invalid~.invalid-feedback,
+.was-validated .form-control:invalid~.invalid-tooltip {
+  display: block;
+}
+
+.form-control.is_invalid,
+.was-validated
+.form-control:invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + .75rem);
+}
