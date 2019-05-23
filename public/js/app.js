@@ -35945,7 +35945,7 @@ var debounce = supportsMicroTasks ? microtaskDebounce : taskDebounce;
  * @method
  * @memberof Popper.Utils
  * @argument {Any} functionToCheck - variable to check
- * @returns {Boolean} answer to: is a function?
+ * @returns {Boolean} answers to: is a function?
  */
 function isFunction(functionToCheck) {
   var getType = {};
@@ -36425,7 +36425,7 @@ function getViewportOffsetRectRelativeToArtbitraryNode(element) {
  * @memberof Popper.Utils
  * @argument {Element} element
  * @argument {Element} customContainer
- * @returns {Boolean} answer to "isFixed?"
+ * @returns {Boolean} answers to "isFixed?"
  */
 function isFixed(element) {
   var nodeName = element.nodeName;

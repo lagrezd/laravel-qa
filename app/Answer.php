@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
+    protected $fillable = ['body', 'user_id'];
+
     public function question()
     {
         return $this->belongsTo(Question::class);
@@ -37,7 +39,7 @@ class Answer extends Model
             $answer->question->save();
         });
 
-        /* static::saved(function ($answer) {
+        /* static::saved(function ($answers) {
             echo "Answer saved\n";
         }); */
     }
