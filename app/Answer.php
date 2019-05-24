@@ -36,11 +36,16 @@ class Answer extends Model
         static::created(function ($answer) {
            //echo "Answer created\n";
             $answer->question->increment('answers_count');
-            $answer->question->save();
+            //$answer->question->save();
         });
 
         /* static::saved(function ($answers) {
             echo "Answer saved\n";
         }); */
+
+        static::deleted(function ($answer) {
+           $answer->question->decrement('answers_count');
+
+        });
     }
 }
