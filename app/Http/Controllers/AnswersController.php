@@ -58,10 +58,10 @@ class AnswersController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Answer  $answer
-     * @return \Illuminate\Http\Response
+     * @param Question $question
+     * @param Answer $answer
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Question $question, Answer $answer)
     {
