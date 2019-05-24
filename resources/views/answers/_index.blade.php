@@ -25,7 +25,6 @@
                                 </a>
                                 <form id="accept-answer-{{ $answer->id }}" action="{{ route('answers.accept', $answer->id) }}" method="post" style="display: none">
                                     @csrf
-
                                 </form>
                                 @else
                                     @if ($answer->is_best)
