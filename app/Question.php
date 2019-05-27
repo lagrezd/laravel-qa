@@ -35,11 +35,11 @@ class Question extends Model
     }
     public function getBodyHtmlAttribute()
     {
-        return \Parsedown::instance()->text($this->body);
+        return $this->bodyHtml();
     }
     public function answers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Answer::class)->orderBy('votes_count', 'DESC');
         // $question->answers->count()
         // foreach ($question->answers as $answer)
     }
@@ -65,4 +65,18 @@ class Question extends Model
         return $this->favorites->count();
     }
 
+    public function getExcerptAttribute()
+    {
+        return $this->excerpt(300);
+    }
+
+    public function excerpt($length)
+    {
+        return str_limit(strip_tags($this->bodyHtml()), $length);
+    }
+
+    public function bodyHtml()
+    {
+        return \Parsedown::instance()->text($this->body);
+    }
 }
