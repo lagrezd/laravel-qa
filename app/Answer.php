@@ -1,9 +1,10 @@
 <?php
-
 namespace App;
 
-use function foo\func;
 use Illuminate\Database\Eloquent\Model;
+use App\Question;
+use App\User;
+
 
 class Answer extends Model
 {
@@ -14,6 +15,9 @@ class Answer extends Model
         return $this->belongsTo(Question::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -24,6 +28,17 @@ class Answer extends Model
         return \Parsedown::instance()->text($this->body);
     }
 
+    public static function boot()
+    {
+        parent::boot();
+        static::created(function ($answer) {
+            $answer->question->increment('answers_count');
+        });
+        static::deleted(function ($answer) {
+            $answer->question->decrement('answers_count');
+        });
+    }
+
     public function getCreatedDateAttribute()
     {
         return $this->created_at->diffForHumans();
@@ -31,7 +46,7 @@ class Answer extends Model
 
     public function getStatusAttribute()
     {
-        return $this->isBest() ? 'vote-accepted': '';
+        return $this->isBest() ? 'vote-accepted' : '';
     }
 
     public function getIsBestAttribute()
@@ -44,27 +59,18 @@ class Answer extends Model
         return $this->id === $this->question->best_answer_id;
     }
 
-    public static function boot()
+    public function votes()
     {
-        parent::boot();
+        return $this->morphToMany(User::class, 'votable');
+    }
 
-        static::created(function ($answer) {
-           //echo "Answer created\n";
-            $answer->question->increment('answers_count');
-            //$answer->question->save();
-        });
+    public function upVotes()
+    {
+        return $this->votes()->wherePivot('vote', 1);
+    }
 
-        /* static::saved(function ($answers) {
-            echo "Answer saved\n";
-        }); */
-
-        static::deleted(function ($answer) {
-            $question = $answer->question;
-            $question->decrement('answers_count');
-            if($question->best_answer_id === $answer->id) {
-                $question->best_answer_id = NULL;
-                $question->save();
-            }
-        });
+    public function downVotes()
+    {
+        return $this->votes()->wherePivot('vote', -1);
     }
 }
