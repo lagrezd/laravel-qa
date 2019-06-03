@@ -65,17 +65,25 @@ class AnswersController extends Controller
         return redirect()->route('questions.show', $question->slug)->with('success', "Your answer has been updated");
     }
 
+
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Answer  $answer
-     * @return \Illuminate\Http\Response
+     * @param Question $question
+     * @param Answer $answer
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Question $question, Answer $answer)
     {
         $this->authorize('delete', $answer);
 
         $answer->delete();
+
+        if (request()->expectsJson())
+        {
+            return response()->json([
+                'message' =>  "Your answer has been removed"
+            ]);
+        }
 
         return back()->with("success", "Your answer has been removed");
     }
