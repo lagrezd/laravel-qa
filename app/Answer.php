@@ -2,9 +2,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Question;
-use App\User;
-
 
 class Answer extends Model
 {
@@ -12,7 +9,7 @@ class Answer extends Model
 
     protected $fillable = ['body', 'user_id'];
 
-    protected $appends = ['created_date'];
+    protected $appends = ['created_date', 'body_html'];
 
     public function question()
     {
