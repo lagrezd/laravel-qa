@@ -7,7 +7,7 @@ class Question extends Model
 
     protected $fillable = ['title', 'body'];
 
-    protected $appends= ['created_date'];
+    protected $appends= ['created_date', 'is_favorited', 'favorites_count'];
 
     public function user() {
         return $this->belongsTo(User::class);
@@ -53,6 +53,7 @@ class Question extends Model
     public function favorites()
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps(); //, 'question_id', 'user_id');
+
     }
     public function isFavorited()
     {
