@@ -77,7 +77,7 @@
     <!-- Scripts -->
     <script>
         window.Auth = {!!json_encode([
-            'signinIn'  => Auth::check(),
+            'signedIn'  => Auth::check(),
             'user'       => Auth::user()
         ] )!!}
     </script>

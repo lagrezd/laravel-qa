@@ -13,9 +13,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password',
     ];
-
     protected $appends = ['url', 'avatar'];
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -59,18 +57,17 @@ class User extends Authenticatable
     public function voteQuestion(Question $question, $vote)
     {
         $voteQuestions = $this->voteQuestions();
+
         return $this->_vote($voteQuestions, $question, $vote);
     }
     public function voteAnswer(Answer $answer, $vote)
     {
         $voteAnswers = $this->voteAnswers();
+
         return $this->_vote($voteAnswers, $answer, $vote);
     }
 
-    /**
-     * DRY
-     */
-    private function _vote($relationship , $model, $vote)
+    private function _vote($relationship, $model, $vote)
     {
         if ($relationship->where('votable_id', $model->id)->exists()) {
             $relationship->updateExistingPivot($model, ['vote' => $vote]);
@@ -84,7 +81,6 @@ class User extends Authenticatable
 
         $model->votes_count = $upVotes + $downVotes;
         $model->save();
-
         return $model->votes_count;
     }
 }

@@ -3,11 +3,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
-    use VotableTrait; // Import du trait DRY
+    use VotableTrait;
 
     protected $fillable = ['title', 'body'];
-
-    protected $appends= ['created_date', 'is_favorited', 'favorites_count'];
+    protected $appends = ['created_date', 'is_favorited', 'favorites_count'];
 
     public function user() {
         return $this->belongsTo(User::class);
@@ -17,6 +16,10 @@ class Question extends Model
         $this->attributes['title'] = $value;
         $this->attributes['slug'] = str_slug($value);
     }
+    // public function setBodyAttribute($value)
+    // {
+    //     $this->attributes['body'] = clen($value);
+    // }
     public function getUrlAttribute()
     {
         return route("questions.show", $this->slug);
@@ -42,8 +45,6 @@ class Question extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class)->orderBy('votes_count', 'DESC');
-        // $question->answers->count()
-        // foreach ($question->answers as $answer)
     }
     public function acceptBestAnswer(Answer $answer)
     {
@@ -53,7 +54,6 @@ class Question extends Model
     public function favorites()
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps(); //, 'question_id', 'user_id');
-
     }
     public function isFavorited()
     {
@@ -67,18 +67,15 @@ class Question extends Model
     {
         return $this->favorites->count();
     }
-
     public function getExcerptAttribute()
     {
         return $this->excerpt(300);
     }
-
     public function excerpt($length)
     {
         return str_limit(strip_tags($this->bodyHtml()), $length);
     }
-
-    public function bodyHtml()
+    private function bodyHtml()
     {
         return \Parsedown::instance()->text($this->body);
     }

@@ -12,11 +12,12 @@
                                 <a href="{{ route('questions.index') }}" class="btn btn-outline-secondary">Back to all Questions</a>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="card-body">
                         <form action="{{ route('questions.store') }}" method="post">
-                            @include('questions._form', ['buttonText' => "Create a new question"])
+                            @include ("questions._form", ['buttonText' => "Ask Question"])
                         </form>
                     </div>
                 </div>

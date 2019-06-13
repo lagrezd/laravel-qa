@@ -12,7 +12,7 @@ window.Vue = require('vue');
 import VueIziToast from 'vue-izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-import Authorization from './authorization/authorize';
+import Authorization from './authorization/authorize.js';
 
 Vue.use(VueIziToast);
 Vue.use(Authorization);

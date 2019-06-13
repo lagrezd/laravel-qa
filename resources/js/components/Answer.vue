@@ -1,6 +1,7 @@
 <template>
     <div class="media post">
         <vote :model="answer" name="answer"></vote>
+
         <div class="media-body">
             <form v-if="editing" @submit.prevent="update">
                 <div class="form-group">
@@ -20,13 +21,14 @@
                     </div>
                     <div class="col-4"></div>
                     <div class="col-4">
-                        <user-info :model="answer" label="answered"></user-info>
+                        <user-info :model="answer" label="Answered"></user-info>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
 <script>
     export default {
         props: ['answer'],
@@ -56,10 +58,10 @@
                     .then(res => {
                         this.editing = false;
                         this.bodyHtml = res.data.body_html;
-                        this.$toast.success(res.data.message, 'Success', {timeout: 3000});
+                        this.$toast.success(res.data.message, "Success", { timeout: 3000 });
                     })
                     .catch(err => {
-                        this.$toast.error(err.response.data.message, 'Error', {timeout: 3000});
+                        this.$toast.error(err.response.data.message, "Error", { timeout: 3000 });
                     });
             },
             destroy () {
@@ -75,14 +77,11 @@
                     buttons: [
                         ['<button><b>YES</b></button>', (instance, toast) => {
 
-                             axios.delete(this.endpoint)
-                            .then(res => {
-                                $(this.$el).fadeOut(500, () => {
-                                    this.$toast.success(res.data.message, 'Success', {timeout: 3000});
-                                })
-                            });
+                            axios.delete(this.endpoint)
+                                .then(res => {
+                                    this.$emit('deleted')
+                                });
                             instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
                         }, true],
                         ['<button>NO</button>', function (instance, toast) {
                             instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');

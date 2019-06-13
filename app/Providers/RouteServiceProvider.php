@@ -1,13 +1,8 @@
 <?php
-
 namespace App\Providers;
-
-use App\Question;
-use function foo\func;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-
-
+use App\Question;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -18,7 +13,6 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     protected $namespace = 'App\Http\Controllers';
-
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -26,18 +20,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Add route show
-        Route::bind('slug', function ($slug) {
-            //return Question::with('answers.user')->where('slug', $slug)->first() ?? abort(404);
+        Route::bind('slug', function($slug) {
+            // return Question::with(['answers.user', 'answers' => function ($query) {
+            //     $query->orderBy('votes_count', 'DESC');
+            // }])->where('slug', $slug)->first() ?? abort(404);
             return Question::with('user')->where('slug', $slug)->first() ?? abort(404);
-            /*return Question::with(['answers.user', 'answers' => function($query) {
-                $query->orderBy('votes_count', 'DESC');
-            }])->where('slug', $slug)->first() ?? abort(404);*/
         });
-
         parent::boot();
     }
-
     /**
      * Define the routes for the application.
      *
@@ -46,12 +36,9 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
-
         $this->mapWebRoutes();
-
         //
     }
-
     /**
      * Define the "web" routes for the application.
      *
@@ -62,10 +49,9 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes()
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
     }
-
     /**
      * Define the "api" routes for the application.
      *
@@ -76,8 +62,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 }

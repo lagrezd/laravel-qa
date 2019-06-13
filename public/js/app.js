@@ -3745,6 +3745,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['answer'],
   data: function data() {
@@ -3758,7 +3761,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post("/answers/".concat(this.id, "/accept")).then(function (res) {
-        _this.$toast.success(res.data.message, 'Success', {
+        _this.$toast.success(res.data.message, "Success", {
           timeout: 3000,
           position: 'bottomLeft'
         });
@@ -3820,6 +3823,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['answer'],
   data: function data() {
@@ -3850,11 +3855,11 @@ __webpack_require__.r(__webpack_exports__);
         _this.editing = false;
         _this.bodyHtml = res.data.body_html;
 
-        _this.$toast.success(res.data.message, 'Success', {
+        _this.$toast.success(res.data.message, "Success", {
           timeout: 3000
         });
       })["catch"](function (err) {
-        _this.$toast.error(err.response.data.message, 'Error', {
+        _this.$toast.error(err.response.data.message, "Error", {
           timeout: 3000
         });
       });
@@ -3873,11 +3878,7 @@ __webpack_require__.r(__webpack_exports__);
         position: 'center',
         buttons: [['<button><b>YES</b></button>', function (instance, toast) {
           axios["delete"](_this2.endpoint).then(function (res) {
-            $(_this2.$el).fadeOut(500, function () {
-              _this2.$toast.success(res.data.message, 'Success', {
-                timeout: 3000
-              });
-            });
+            _this2.$emit('deleted');
           });
           instance.hide({
             transitionOut: 'fadeOut'
@@ -3952,18 +3953,14 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       nextUrl: null
     };
   },
-  components: {
-    Answer: _Answer_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
   created: function created() {
     this.fetch("/questions/".concat(this.questionId, "/answers"));
   },
-  computed: {
-    title: function title() {
-      return this.count + ' ' + (this.count > 1 ? 'Answers' : 'Asnwer');
-    }
-  },
   methods: {
+    remove: function remove(index) {
+      this.answers.splice(index, 1);
+      this.count--;
+    },
     fetch: function fetch(endpoint) {
       var _this = this;
 
@@ -3977,6 +3974,14 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         _this.nextUrl = data.next_page_url;
       });
     }
+  },
+  computed: {
+    title: function title() {
+      return this.count + " " + (this.count > 1 ? 'Answers' : 'Answer');
+    }
+  },
+  components: {
+    Answer: _Answer_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
 });
 
@@ -3998,13 +4003,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['question'],
   data: function data() {
     return {
-      isFavorited: this.question.isFavorite,
+      isFavorited: this.question.is_favorited,
       count: this.question.favorites_count,
       id: this.question.id
     };
@@ -4020,7 +4023,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     toggle: function toggle() {
       if (!this.signedIn) {
-        this.$toast.warning('Please login to favorite question', 'Warning', {
+        this.$toast.warning("Please login to favorite this question", "Warning", {
           timeout: 3000,
           position: 'bottomLeft'
         });
@@ -4035,8 +4038,6 @@ __webpack_require__.r(__webpack_exports__);
       axios["delete"](this.endpoint).then(function (res) {
         _this.count--;
         _this.isFavorited = false;
-      })["catch"](function (err) {
-        console.log(err);
       });
     },
     create: function create() {
@@ -4045,8 +4046,6 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(this.endpoint).then(function (res) {
         _this2.count++;
         _this2.isFavorited = true;
-      })["catch"](function (err) {
-        console.log(err);
       });
     }
   }
@@ -4127,16 +4126,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['name', 'model'],
-  data: function data() {
-    return {
-      count: this.model.votes_count,
-      id: this.model.id
-    };
-  },
-  components: {
-    Favorite: _Favorite_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Accept: _Accept_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
-  },
   computed: {
     classes: function classes() {
       return this.signedIn ? '' : 'off';
@@ -4144,6 +4133,16 @@ __webpack_require__.r(__webpack_exports__);
     endpoint: function endpoint() {
       return "/".concat(this.name, "s/").concat(this.id, "/vote");
     }
+  },
+  components: {
+    Favorite: _Favorite_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Accept: _Accept_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      count: this.model.votes_count,
+      id: this.model.id
+    };
   },
   methods: {
     title: function title(voteType) {
@@ -4164,7 +4163,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (!this.signedIn) {
         this.$toast.warning("Please login to vote the ".concat(this.name), "Warning", {
-          timeout: 3000,
+          timout: 3000,
           position: 'bottomLeft'
         });
         return;
@@ -41638,7 +41637,7 @@ var render = function() {
           "a",
           {
             class: _vm.classes,
-            attrs: { href: "", title: "Mark this answer as best answer" },
+            attrs: { title: "Mark this answer as best answer" },
             on: {
               click: function($event) {
                 $event.preventDefault()
@@ -41656,7 +41655,6 @@ var render = function() {
           {
             class: _vm.classes,
             attrs: {
-              href: "",
               title: "The question owner accepted this answer as best answer"
             }
           },
@@ -41792,7 +41790,7 @@ var render = function() {
                   { staticClass: "col-4" },
                   [
                     _c("user-info", {
-                      attrs: { model: _vm.answer, label: "answered" }
+                      attrs: { model: _vm.answer, label: "Answered" }
                     })
                   ],
                   1
@@ -41830,43 +41828,48 @@ var render = function() {
     ? _c("div", { staticClass: "row mt-4" }, [
         _c("div", { staticClass: "col-md-12" }, [
           _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-body" }, [
-              _c(
-                "div",
-                { staticClass: "card-title" },
-                [
-                  _c("h2", [_vm._v(_vm._s(_vm.title))]),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _vm._l(_vm.answers, function(answer) {
-                    return _c("answer", {
-                      key: answer.id,
-                      attrs: { answer: answer }
-                    })
-                  }),
-                  _vm._v(" "),
-                  _vm.nextUrl
-                    ? _c("div", { staticClass: "text-center mt-3" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-outline-secondary",
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.fetch(_vm.nextUrl)
-                              }
+            _c(
+              "div",
+              { staticClass: "card-body" },
+              [
+                _c("div", { staticClass: "card-title" }, [
+                  _c("h2", [_vm._v(_vm._s(_vm.title))])
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _vm._l(_vm.answers, function(answer, index) {
+                  return _c("answer", {
+                    key: answer.id,
+                    attrs: { answer: answer },
+                    on: {
+                      deleted: function($event) {
+                        return _vm.remove(index)
+                      }
+                    }
+                  })
+                }),
+                _vm._v(" "),
+                _vm.nextUrl
+                  ? _c("div", { staticClass: "text-center mt-3" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-secondary",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.fetch(_vm.nextUrl)
                             }
-                          },
-                          [_vm._v("Load more answers")]
-                        )
-                      ])
-                    : _vm._e()
-                ],
-                2
-              )
-            ])
+                          }
+                        },
+                        [_vm._v("Load more answers")]
+                      )
+                    ])
+                  : _vm._e()
+              ],
+              2
+            )
           ])
         ])
       ])
@@ -41899,8 +41902,7 @@ var render = function() {
     {
       class: _vm.classes,
       attrs: {
-        href: "",
-        title: "Click to mark as favorite question(Click again to undo)"
+        title: "Click to mark as favorite question (Click again to undo)"
       },
       on: {
         click: function($event) {
@@ -41980,7 +41982,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "d-flex flex-column vote-controls" },
+    { staticClass: "d-fex flex-column vote-controls" },
     [
       _c(
         "a",
@@ -54179,7 +54181,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_izitoast__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_izitoast__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var izitoast_dist_css_iziToast_min_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! izitoast/dist/css/iziToast.min.css */ "./node_modules/izitoast/dist/css/iziToast.min.css");
 /* harmony import */ var izitoast_dist_css_iziToast_min_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(izitoast_dist_css_iziToast_min_css__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _authorization_authorize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./authorization/authorize */ "./resources/js/authorization/authorize.js");
+/* harmony import */ var _authorization_authorize_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./authorization/authorize.js */ "./resources/js/authorization/authorize.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -54194,7 +54196,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 Vue.use(vue_izitoast__WEBPACK_IMPORTED_MODULE_0___default.a);
-Vue.use(_authorization_authorize__WEBPACK_IMPORTED_MODULE_2__["default"]);
+Vue.use(_authorization_authorize_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -54278,6 +54280,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")["default"];
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -54285,7 +54288,6 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
  */
 
 try {
-  window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")["default"];
   window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");

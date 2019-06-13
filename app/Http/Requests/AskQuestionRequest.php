@@ -1,9 +1,6 @@
 <?php
-
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
-
 class AskQuestionRequest extends FormRequest
 {
     /**
@@ -13,10 +10,8 @@ class AskQuestionRequest extends FormRequest
      */
     public function authorize()
     {
-        // return false;
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,7 +21,7 @@ class AskQuestionRequest extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-            'body'  => 'required'
+            'body' => 'required'
         ];
     }
 }
