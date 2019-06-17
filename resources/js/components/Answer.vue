@@ -30,8 +30,16 @@
 </template>
 
 <script>
+    import Vote from './Vote.vue';
+    import UserInfo from './UserInfo.vue';
     export default {
         props: ['answer'],
+
+        components: {
+            Vote,
+            UserInfo
+        },
+
         data () {
             return {
                 editing: false,
@@ -42,15 +50,18 @@
                 beforeEditCache: null
             }
         },
+
         methods: {
             edit () {
                 this.beforeEditCache = this.body;
                 this.editing = true;
             },
+
             cancel () {
                 this.body = this.beforeEditCache;
                 this.editing = false;
             },
+
             update () {
                 axios.patch(this.endpoint, {
                     body: this.body
@@ -64,6 +75,7 @@
                         this.$toast.error(err.response.data.message, "Error", { timeout: 3000 });
                     });
             },
+
             destroy () {
                 this.$toast.question('Are you sure about that?', "Confirm", {
                     timeout: 20000,
@@ -76,7 +88,6 @@
                     position: 'center',
                     buttons: [
                         ['<button><b>YES</b></button>', (instance, toast) => {
-
                             axios.delete(this.endpoint)
                                 .then(res => {
                                     this.$emit('deleted')
@@ -90,6 +101,7 @@
                 });
             }
         },
+
         computed: {
             isInvalid () {
                 return this.body.length < 10;
