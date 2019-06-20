@@ -8,7 +8,6 @@ export default {
 
             if (typeof policy === 'string' && typeof model === 'object') {
                 const user = window.Auth.user;
-                console.log(policies)
                 return policies[policy](user, model);
             }
         };
