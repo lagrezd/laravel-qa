@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <form class="card-body" v-if="editing" @submit.prevent="update">
+                <form class="card-body" v-show="authorize('modify', question) && editing" @submit.prevent="update">
                     <div class="card-title">
                         <input type="text" class="form-control form-control-lg" v-model="title">
                     </div>
@@ -16,12 +16,12 @@
                                     <textarea rows="10" v-model="body" class="form-control" required></textarea>
                                 </m-editor>
                             </div>
-                            <button class="btn btn-primary" :disabled="isInvalid" type="button">Update</button>
+                            <button class="btn btn-primary" :disabled="isInvalid">Update</button>
                             <button class="btn btn-outline-secondary" @click="cancel" type="button">Cancel</button>
                         </div>
                     </div>
                 </form>
-                <div class="card-body" v-else>
+                <div class="card-body" v-show="!editing">
                     <div class="card-title">
                         <div class="d-flex align-items-center">
                             <h1>{{ title }}</h1>
