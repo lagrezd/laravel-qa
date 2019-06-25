@@ -12,7 +12,7 @@
                     <div class="media">
                         <div class="media-body">
                             <div class="form-group">
-                                <m-editor :body="body">
+                                <m-editor :body="body" :name="uniqueName">
                                     <textarea rows="10" v-model="body" class="form-control" required></textarea>
                                 </m-editor>
                             </div>
@@ -37,7 +37,7 @@
                         <vote :model="question" name="question"></vote>
 
                         <div class="media-body">
-                            <div v-html="bodyHtml"></div>
+                            <div v-html="bodyHtml" ref="bodyHtml"></div>
                             <div class="row">
                                 <div class="col-4">
                                     <div class="ml-auto">
@@ -59,15 +59,13 @@
 </template>
 
 <script>
-    import Vote from './Vote.vue';
-    import UserInfo from './UserInfo.vue';
-    import MEditor from './MEditor.vue';
     import modification from '../mixins/modification';
 
     export default {
         props: ['question'],
+
         mixins: [modification],
-        components: { Vote, UserInfo, MEditor },
+
         data () {
             return {
                 title: this.question.title,
@@ -77,14 +75,19 @@
                 beforeEditCache: {}
             }
         },
+
         computed: {
             isInvalid () {
                 return this.body.length < 10 || this.title.length < 10;
             },
             endpoint () {
                 return `/questions/${this.id}`;
+            },
+            uniqueName () {
+                return `question-${this.id}`;
             }
         },
+
         methods: {
             setEditCache () {
                 this.beforeEditCache = {

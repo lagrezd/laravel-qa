@@ -25,23 +25,36 @@
 <script>
     import Answer from './Answer';
     import NewAnswer from './NewAnswer';
+    import highlight from '../mixins/highlight';
+
     export default {
         props: ['question'],
+
+        mixins: [highlight],
+
+        components: { Answer, NewAnswer },
+
         data () {
             return {
                 questionId: this.question.id,
                 count: this.question.answers_count,
                 answers: [],
-                nextUrl: null
+                answerIds: [],
+                nextUrl: null,
             }
         },
+
         created () {
             this.fetch(`/questions/${this.questionId}/answers`);
         },
+
         methods: {
             add (answer) {
-                this.answers.push(answer)
-                this.count++
+                this.answers.push(answer);
+                this.count++;
+                this.$nextTick(() => {
+                    this.highlight(`answer-${answer.id}`);
+                })
             },
 
             remove (index) {
@@ -50,18 +63,28 @@
             },
 
             fetch (endpoint) {
+                this.answerIds = [];
+
                 axios.get(endpoint)
                     .then(({data}) => {
+                        this.answerIds = data.data.map(a => a.id);
+
                         this.answers.push(...data.data);
+
                         this.nextUrl = data.next_page_url;
+                    })
+                    .then(() => {
+                        this.answerIds.forEach(id => {
+                            this.highlight(`answer-${id}`);
+                        })
                     })
             }
         },
+
         computed: {
             title () {
                 return this.count + " " + (this.count > 1 ? 'Answers' : 'Answer');
             }
-        },
-        components: { Answer, NewAnswer }
+        }
     }
 </script>
